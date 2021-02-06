@@ -1,10 +1,11 @@
 const Engine = Matter.Engine;
-const World= Matter.World;
+const World = Matter.World;
 const Bodies = Matter.Bodies;
 const Constraint = Matter.Constraint;
 
+var engine, world;
 
-var ground, base;
+var ground, base1, base2;
 var polygon, polygonImage;
 var block1, block2, block3, block4, block5, block6, block7, block8, block9;
 
@@ -14,35 +15,39 @@ function preload() {
 
 function setup() {
     createCanvas(1200, 800);
+    engine = Engine.create();
+    world = engine.world;
 
-    ground = new Ground(600, 780, 1200, 40);
-    polygon = Bodies.circle(50, 200, 20);
+    ground = new Ground(600, 780, 1400, 40);
+    polygon = Bodies.circle(100, 200, 20);
     World.add(world, polygon);
-    base = new Ground(390, 240, 175, 20);
+    console.log(polygon);
+    base1 = new Ground(390, 400, 240, 20);
+    // base2;
 
-    imageMode(CENTER);
-    image(polygonImage, polygon.position.x, polygon.position.y, 40, 40);
+    
 
     slingshot = new Slingshot(this.polygon, {x:100, y:200});
 
-    block1 = new Box(330, 235, 30, 40);
-    block2 = new Box(360, 235, 30, 40);
-    block3 = new Box(390, 235, 30, 40);
-    block4 = new Box(420, 235, 30, 40);
-    block5 = new Box(450, 235, 30, 40);
+    block1 = new Block(330, 235, 30, 40);
+    block2 = new Block(360, 235, 30, 40);
+    block3 = new Block(390, 235, 30, 40);
+    block4 = new Block(420, 235, 30, 40);
+    block5 = new Block(450, 235, 30, 40);
 
-    block6 = new Box(360, 195, 30, 40);
-    block7 = new Box(390, 195, 30, 40);
-    block8 = new Box(420, 195, 30, 40);
+    block6 = new Block(360, 195, 30, 40);
+    block7 = new Block(390, 195, 30, 40);
+    block8 = new Block(420, 195, 30, 40);
 
-    block9 = new Box(390, 155, 30, 40);
+    block9 = new Block(390, 155, 30, 40);
 }
 
 function draw() {
+    background("black");
     Engine.update(engine);
 
     ground.display();
-    base.display();
+    base1.display();
     block1.display();
     block2.display();
     block3.display();
@@ -52,4 +57,20 @@ function draw() {
     block7.display();
     block8.display();
     block9.display();
+    imageMode(CENTER);
+    image(polygonImage, polygon.position.x, polygon.position.y, 40, 40);
+}
+
+function reload() {
+    if(keyCode === 32) {
+        slingshot.attach(bodyA);
+    }
+}
+
+function mouseDragged() {
+     Matter.Body.setPosition(polygon, {x: mouseX, y: mouseY});
+}
+
+function mouseReleased() {
+    slingshot.fly();
 }
